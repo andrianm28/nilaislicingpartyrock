@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Business Name Generator Pro</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, sans-serif;
+            background-color: #0f0f0f;
+            color: #e0e0e0;
+            min-height: 100vh;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem 1.5rem;
+        }
+
+        /* Header */
+        .header {
+            text-align: center;
+            margin-bottom: 2.5rem;
+            padding: 2rem;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 16px;
+            border: 1px solid #2a2a4a;
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            color: #ffffff;
+            margin-bottom: 0.75rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .header p {
+            color: #a0a0b0;
+            font-size: 0.95rem;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* Input Section */
+        .input-section {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #2a2a2a;
+        }
+
+        .input-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .input-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .input-group label {
+            display: block;
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: #c0c0d0;
+            margin-bottom: 0.5rem;
+        }
+
+        .input-group input,
+        .input-group select {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: #0f0f0f;
+            border: 1px solid #333;
+            border-radius: 8px;
+            color: #e0e0e0;
+            font-size: 0.95rem;
+            transition: border-color 0.2s ease;
+        }
+
+        .input-group input:focus,
+        .input-group select:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .input-group input::placeholder {
+            color: #555;
+        }
+
+        .input-group select {
+            cursor: pointer;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' fill='%23888' viewBox='0 0 16 16'%3E%3Cpath d='M8 11L3 6h10l-5 5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 1rem center;
+        }
+
+        /* Run Button */
+        .run-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: opacity 0.2s ease, transform 0.1s ease;
+            margin-bottom: 1.5rem;
+        }
+
+        .run-btn:hover {
+            opacity: 0.9;
+        }
+
+        .run-btn:active {
+            transform: scale(0.98);
+        }
+
+        .run-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Output Panel */
+        .output-panel {
+            background: #1a1a1a;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            border: 1px solid #2a2a2a;
+        }
+
+        .output-panel h3 {
+            font-size: 1rem;
+            color: #c0c0d0;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .output-content {
+            height: 340px;
+            overflow-y: auto;
+            padding: 1rem;
+            background: #0f0f0f;
+            border-radius: 8px;
+            border: 1px solid #252525;
+            font-size: 0.9rem;
+            line-height: 1.7;
+        }
+
+        /* Custom Scrollbar */
+        .output-content::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .output-content::-webkit-scrollbar-track {
+            background: #1a1a1a;
+            border-radius: 3px;
+        }
+
+        .output-content::-webkit-scrollbar-thumb {
+            background: #444;
+            border-radius: 3px;
+        }
+
+        .output-content::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Markdown Rendered Lines */
+        .md-line {
+            display: block;
+            animation: fadeIn 0.15s ease-in;
+        }
+
+        .md-line h1, .md-line h2, .md-line h3 {
+            color: #ffffff;
+            margin-top: 0.5rem;
+        }
+
+        .md-line h1 { font-size: 1.3rem; }
+        .md-line h2 { font-size: 1.1rem; }
+        .md-line h3 { font-size: 1rem; }
+
+        .md-line strong {
+            color: #b0b0ff;
+        }
+
+        .md-line em {
+            color: #a0d0a0;
+            font-style: italic;
+        }
+
+        .md-line code {
+            background: #2a2a2a;
+            padding: 0.15rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Fira Code', monospace;
+            font-size: 0.85em;
+            color: #f0b060;
+        }
+
+        .md-line hr {
+            border: none;
+            border-top: 1px solid #333;
+            margin: 0.5rem 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(2px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Blinking Cursor */
+        .streaming-cursor {
+            display: inline-block;
+            width: 2px;
+            height: 1em;
+            background: #667eea;
+            animation: blink 0.8s infinite;
+            vertical-align: text-bottom;
+            margin-left: 2px;
+        }
+
+        @keyframes blink {
+            0%, 50% { opacity: 1; }
+            51%, 100% { opacity: 0; }
+        }
+
+        /* Spinner */
+        .spinner {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+
+        .spinner.active {
+            display: block;
+        }
+
+        .spinner::after {
+            content: '';
+            display: inline-block;
+            width: 30px;
+            height: 30px;
+            border: 3px solid #333;
+            border-top-color: #667eea;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Error */
+        .error-msg {
+            color: #ff6b6b;
+            background: rgba(255, 107, 107, 0.1);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            display: none;
+            font-size: 0.9rem;
+        }
+
+        .error-msg.active {
+            display: block;
+        }
+
+        /* Responsive */
+        @media (max-width: 600px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            .header {
+                padding: 1.5rem 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header Banner -->
+        <div class="header">
+            <h1>Business Name Generator Pro</h1>
+            <p>Enter your industry, optional keywords, and choose a naming style to instantly generate 10 unique business name ideas with explanations. Fill in the inputs below and let AI do the creative work.</p>
+        </div>
+
+        <!-- Input Section -->
+        <div class="input-section">
+            <div class="input-group">
+                <label for="industry">Industry or Business Type</label>
+                <input type="text" id="industry" placeholder="e.g., tech startup, coffee shop, consulting firm, fitness studio...">
+            </div>
+
+            <div class="input-group">
+                <label for="keywords">Keywords or Themes (optional)</label>
+                <input type="text" id="keywords" placeholder="e.g., luxury, speed, nature, innovation...">
+            </div>
+
+            <div class="input-group">
+                <label for="nameStyle">Name Style</label>
+                <select id="nameStyle">
+                    <option value="Modern" selected>Modern</option>
+                    <option value="Professional">Professional</option>
+                    <option value="Creative">Creative</option>
+                    <option value="Playful">Playful</option>
+                    <option value="Luxury">Luxury</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Run Button -->
+        <button class="run-btn" id="runBtn" onclick="runGeneration()">✨ Generate Business Names</button>
+
+        <!-- Output: Business Name Ideas -->
+        <div class="output-panel">
+            <h3>💡 Business Name Ideas</h3>
+            <div class="spinner" id="spinner-names"></div>
+            <div class="error-msg" id="error-names"></div>
+            <div class="output-content" id="output-names"></div>
+        </div>
+    </div>
+
+    <script>
+        // Stream URLs injected by CI/CD
+        const STREAM_URLS = {
+            business_name_ideas: '_URL_BUSINESS_NAME_IDEAS_',
+        };
+
+        function renderMarkdownLine(line) {
+            // Headers
+            if (line.startsWith('### ')) return `<span class="md-line"><h3>${escapeHtml(line.slice(4))}</h3></span>`;
+            if (line.startsWith('## ')) return `<span class="md-line"><h2>${escapeHtml(line.slice(3))}</h2></span>`;
+            if (line.startsWith('# ')) return `<span class="md-line"><h1>${escapeHtml(line.slice(2))}</h1></span>`;
+
+            // Horizontal rule
+            if (line.trim() === '---') return `<span class="md-line"><hr></span>`;
+
+            // Bullet list
+            if (/^[\-\*]\s/.test(line)) {
+                const content = formatInline(line.slice(2));
+                return `<span class="md-line">• ${content}</span>`;
+            }
+
+            // Numbered list
+            if (/^\d+[\.\)]\s/.test(line)) {
+                const content = formatInline(line);
+                return `<span class="md-line">${content}</span>`;
+            }
+
+            // Regular line
+            return `<span class="md-line">${formatInline(line)}</span>`;
+        }
+
+        function formatInline(text) {
+            let result = escapeHtml(text);
+            // Bold **text** or *text* (single for bold in this context)
+            result = result.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            result = result.replace(/\*(.+?)\*/g, '<em>$1</em>');
+            // Inline code
+            result = result.replace(/`(.+?)`/g, '<code>$1</code>');
+            return result;
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        async function streamResponse(url, body, outputEl, spinnerEl, errorEl) {
+            outputEl.innerHTML = '';
+            spinnerEl.classList.add('active');
+            errorEl.classList.remove('active');
+
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(body)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+
+                spinnerEl.classList.remove('active');
+
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let cursorEl = document.createElement('span');
+                cursorEl.className = 'streaming-cursor';
+                outputEl.appendChild(cursorEl);
+
+                while (true) {
+                    const { done, value } = await reader.read();
+                    if (done) break;
+
+                    buffer += decoder.decode(value, { stream: true });
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // Keep incomplete line in buffer
+
+                    for (const line of lines) {
+                        const rendered = renderMarkdownLine(line);
+                        cursorEl.insertAdjacentHTML('beforebegin', rendered);
+                    }
+
+                    // Auto-scroll to bottom
+                    outputEl.scrollTop = outputEl.scrollHeight;
+                }
+
+                // Flush remaining buffer
+                if (buffer.trim()) {
+                    const rendered = renderMarkdownLine(buffer);
+                    cursorEl.insertAdjacentHTML('beforebegin', rendered);
+                }
+
+                // Remove cursor
+                cursorEl.remove();
+                outputEl.scrollTop = outputEl.scrollHeight;
+
+            } catch (err) {
+                spinnerEl.classList.remove('active');
+                errorEl.textContent = `Error: ${err.message}`;
+                errorEl.classList.add('active');
+            }
+        }
+
+        function runGeneration() {
+            const industry = document.getElementById('industry').value.trim();
+            const keywords = document.getElementById('keywords').value.trim();
+            const nameStyle = document.getElementById('nameStyle').value;
+
+            if (!industry) {
+                alert('Please enter an industry or business type.');
+                document.getElementById('industry').focus();
+                return;
+            }
+
+            const btn = document.getElementById('runBtn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Generating...';
+
+            const body = {
+                industry: industry,
+                keywords: keywords,
+                name_style: nameStyle
+            };
+
+            const promises = [
+                streamResponse(
+                    STREAM_URLS.business_name_ideas,
+                    body,
+                    document.getElementById('output-names'),
+                    document.getElementById('spinner-names'),
+                    document.getElementById('error-names')
+                )
+            ];
+
+            Promise.all(promises).finally(() => {
+                btn.disabled = false;
+                btn.textContent = '✨ Generate Business Names';
+            });
+        }
+
+        // Allow Enter key to trigger generation
+        document.getElementById('industry').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') runGeneration();
+        });
+    </script>
+</body>
+</html>
