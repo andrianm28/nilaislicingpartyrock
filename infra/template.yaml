@@ -67,6 +67,12 @@ Resources:
             RestApiId: !Ref ApiGateway
             Path: /generate
             Method: POST
+        OptionsGenerate:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /generate
+            Method: OPTIONS
 
   # S3 Bucket for Frontend
   FrontendBucket:
