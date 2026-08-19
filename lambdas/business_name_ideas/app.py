@@ -18,13 +18,13 @@ def add_cors_headers(response):
     return response
 
 
-@app.route("/", methods=["OPTIONS"])
+@app.route("/generate", methods=["OPTIONS"])
 def options():
     resp = Response("", status=200)
     return add_cors_headers(resp)
 
 
-@app.route("/", methods=["POST"])
+@app.route("/generate", methods=["POST"])
 def generate_names():
     data = request.get_json(force=True)
 

@@ -35,7 +35,16 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:bedrock:*:${AWS::AccountId}:inference-profile/global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
                   - "arn:aws:bedrock:*::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
-                  - !Sub "arn:aws:bedrock:ap-southeast-5:${AWS::AccountId}:inference-profile/global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
+
+  # API Gateway
+  ApiGateway:
+    Type: AWS::Serverless::Api
+    Properties:
+      StageName: prod
+      Cors:
+        AllowMethods: "'POST,OPTIONS'"
+        AllowHeaders: "'Content-Type'"
+        AllowOrigin: "'*'"
 
   # Lambda Function - Business Name Ideas
   BusinessNameIdeasFunction:
@@ -50,11 +59,14 @@ Resources:
       Environment:
         Variables:
           AWS_LAMBDA_EXEC_WRAPPER: /opt/bootstrap
-          AWS_LWA_INVOKE_MODE: response_stream
           PORT: "8080"
-      FunctionUrlConfig:
-        AuthType: NONE
-        InvokeMode: RESPONSE_STREAM
+      Events:
+        PostGenerate:
+          Type: Api
+          Properties:
+            RestApiId: !Ref ApiGateway
+            Path: /generate
+            Method: POST
 
   # S3 Bucket for Frontend
   FrontendBucket:
@@ -84,8 +96,8 @@ Resources:
 
 Outputs:
   BusinessNameIdeasUrl:
-    Description: Function URL for Business Name Ideas
-    Value: !GetAtt BusinessNameIdeasFunctionUrl.FunctionUrl
+    Description: API Gateway URL for Business Name Ideas
+    Value: !Sub "https://${ApiGateway}.execute-api.${AWS::Region}.amazonaws.com/prod/generate"
   WebsiteUrl:
     Description: S3 Website URL
     Value: !GetAtt FrontendBucket.WebsiteURL
