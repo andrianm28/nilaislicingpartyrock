@@ -5,7 +5,7 @@ from flask import Flask, request, Response, stream_with_context
 
 app = Flask(__name__)
 
-BEDROCK_MODEL_ID = "global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
+BEDROCK_MODEL_ID = os.environ.get("BEDROCK_MODEL_ID", "anthropic.claude-3-5-haiku-20241022-v1:0")
 REGION = os.environ.get("AWS_REGION", "ap-southeast-5")
 
 bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
@@ -74,11 +74,7 @@ Generate exactly 10 creative, unique, and memorable business names tailored to t
     body = json.dumps({
         "anthropic_version": "bedrock-2023-05-31",
         "max_tokens": 4096,
-        "messages": messages,
-        "thinking": {
-            "type": "enabled",
-            "budget_tokens": 1024
-        }
+        "messages": messages
     })
 
     def generate():
