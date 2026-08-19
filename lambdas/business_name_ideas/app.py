@@ -6,7 +6,7 @@ from flask import Flask, request, Response, stream_with_context
 app = Flask(__name__)
 
 BEDROCK_MODEL_ID = "global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
-REGION = os.environ.get("AWS_REGION", "ap-southeast-1")
+REGION = os.environ.get("AWS_REGION", "ap-southeast-5")
 
 bedrock_runtime = boto3.client("bedrock-runtime", region_name=REGION)
 

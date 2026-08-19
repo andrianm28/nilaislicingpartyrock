@@ -35,6 +35,7 @@ Resources:
                 Resource:
                   - !Sub "arn:aws:bedrock:*:${AWS::AccountId}:inference-profile/global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
                   - "arn:aws:bedrock:*::foundation-model/anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
+                  - !Sub "arn:aws:bedrock:ap-southeast-5:${AWS::AccountId}:inference-profile/global.anthropic.claude-haiku-4-5-20251001-v1:0-20260217-v1:0"
 
   # Lambda Function - Business Name Ideas
   BusinessNameIdeasFunction:
